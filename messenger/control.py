@@ -10,18 +10,23 @@
 # you may need to put something here...
 from enum import Enum
 
-
+# following the listing of known policy levels
 class Control(Enum):
-    UNCLASSIFIED = 1
-    PUBLIC = 2
-    CONFIDENTIAL = 3
+    PUBLIC = 1
+    CONFIDENTIAL = 2
+    PRIVILEGED = 3
     SECRET = 4
-    TOP_SECRET = 5
 
+#bell-lapadula check for reading privileges
+def securityConditionRead(assetControl, subjectControl):
+   try:
+      return int(subjectControl.value) >= int(assetControl.value)
+   except:
+      return False
 
-def securityConditionRead(assetControl: Control, subjectControl: Control):
-    return subjectControl >= assetControl
-
-
-def securityConditionWrite(assetControl: Control, subjectControl: Control):
-    return subjectControl <= assetControl
+#bell-lapadula check for writing privileges
+def securityConditionWrite(assetControl, subjectControl):
+   try:
+      return int(subjectControl.value) <= int(assetControl.value)
+   except:
+      return False

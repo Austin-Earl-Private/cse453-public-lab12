@@ -27,6 +27,7 @@ class Message:
         self._text = "Empty"
         self._author = ""
         self._date = ""
+        self.text_control = control.Control.PUBLIC
         self._id = Message._id_next
         Message._id_next += 1
 
@@ -34,10 +35,11 @@ class Message:
     # MESSAGE NON-DEFAULT CONSTRUCTOR
     # Create a message and fill it
     ##################################################   
-    def __init__(self, text, author, date):
+    def __init__(self, text, author, date, text_control):
         self._text = text
         self._author = author
         self._date = date
+        self.text_control = control.Control[text_control.upper()]
         self._id = Message._id_next
         Message._id_next += 1
         self._empty = False
@@ -48,6 +50,13 @@ class Message:
     ##################################################   
     def get_id(self):
         return self._id
+
+    ##################################################
+    # MESSAGE :: GET Control
+    # Determine the unique ID of this message
+    ##################################################   
+    def get_control(self):
+        return self.text_control
 
     ##################################################
     # MESSAGE :: DISPLAY PROPERTIES

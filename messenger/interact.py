@@ -11,19 +11,21 @@ import messages, control
 
 ###############################################################
 # USER
-# User has a name and a password
+# User has a name and a password and a control
 ###############################################################
 class User:
-    def __init__(self, name, password):
+    def __init__(self, name, password, user_control):
         self.name = name
         self.password = password
+        self.user_control = user_control
 
+#if user isn't valid sign in as a public user
 userlist = [
-   [ "AdmiralAbe",     "password" ],  
-   [ "CaptainCharlie", "password" ], 
-   [ "SeamanSam",      "password" ],
-   [ "SeamanSue",      "password" ],
-   [ "SeamanSly",      "password" ]
+   [ "AdmiralAbe",     "password", control.Control.SECRET ],  
+   [ "CaptainCharlie", "password", control.Control.PRIVILEGED ], 
+   [ "SeamanSam",      "password", control.Control.CONFIDENTIAL ],
+   [ "SeamanSue",      "password", control.Control.CONFIDENTIAL ],
+   [ "SeamanSly",      "password", control.Control.CONFIDENTIAL ]
 ]
 
 ###############################################################
@@ -45,9 +47,15 @@ class Interact:
     # Authenticate the user and get him/her all set up
     ##################################################
     def __init__(self, username, password, messages):
-        self._authenticate(username, password)
-        self._username = username
-        self._p_messages = messages
+      if (self._authenticate(username, password)):
+         self._username = username
+         self._p_messages = messages
+         #partially hard coded, would require partial rewrite if user fields are changed
+         self._user_control = userlist[self._id_from_user(username)][2]
+      else:
+         self._username = username
+         self._p_messages = messages
+         self._user_control = control.Control.PUBLIC
 
     ##################################################
     # INTERACT :: SHOW
@@ -55,9 +63,12 @@ class Interact:
     ##################################################
     def show(self):
         id_ = self._prompt_for_id("display")
-        if not self._p_messages.show(id_):
+        if control.securityConditionRead(self._p_messages.get_control(id_), self._user_control):
+         if not self._p_messages.show(id_):
             print(f"ERROR! Message ID \'{id_}\' does not exist")
-        print()
+        else:
+            print(f"ERROR! Message ID \'{id_}\' does not exist or you do not have rights")
+        
 
     ##################################################
     # INTERACT :: DISPLAY
@@ -75,7 +86,8 @@ class Interact:
     def add(self):
         self._p_messages.add(self._prompt_for_line("message"),
                              self._username,
-                             self._prompt_for_line("date"))
+                             self._prompt_for_line("date"),
+                             self._user_control)
 
     ##################################################
     # INTERACT :: UPDATE
