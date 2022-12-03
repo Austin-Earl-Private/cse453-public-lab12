@@ -68,7 +68,7 @@ class Interact:
             print(f"ERROR! Message ID \'{id_}\' does not exist")
         else:
             print(f"ERROR! Message ID \'{id_}\' does not exist or you do not have rights")
-        
+        print()
 
     ##################################################
     # INTERACT :: DISPLAY
@@ -87,26 +87,36 @@ class Interact:
         self._p_messages.add(self._prompt_for_line("message"),
                              self._username,
                              self._prompt_for_line("date"),
-                             self._user_control)
+                             self._user_control.name)
 
     ##################################################
     # INTERACT :: UPDATE
     # Update a single message
     ################################################## 
     def update(self):
-        id_ = self._prompt_for_id("update")
-        if not self._p_messages.show(id_):
+      id_ = self._prompt_for_id("update")
+      if control.securityConditionRead(self._p_messages.get_control(id_), self._user_control):
+         if not self._p_messages.show(id_):
             print(f"ERROR! Message ID \'{id_}\' does not exist\n")
             return
-        self._p_messages.update(id_, self._prompt_for_line("message"))
-        print()
+         self._p_messages.update(id_, self._prompt_for_line("message"))
+         print()
+      else:
+         print(f"ERROR! Message ID \'{id_}\' does not exist or you do not have rights")
+      print()
             
     ##################################################
     # INTERACT :: REMOVE
     # Remove one message from the list
     ################################################## 
     def remove(self):
-        self._p_messages.remove(self._prompt_for_id("delete"))
+      id_ = self._prompt_for_id("delete")
+      if control.securityConditionRead(self._p_messages.get_control(id_), self._user_control):
+         self._p_messages.remove(id_)
+         print()
+      else:
+         print("You Do Not Have The Required Rights")
+         print()
 
     ##################################################
     # INTERACT :: PROMPT FOR LINE
