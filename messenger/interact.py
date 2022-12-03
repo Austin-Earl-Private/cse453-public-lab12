@@ -64,8 +64,17 @@ class Interact:
     def show(self):
         id_ = self._prompt_for_id("display")
         if control.securityConditionRead(self._p_messages.get_control(id_), self._user_control):
-         if not self._p_messages.show(id_):
-            print(f"ERROR! Message ID \'{id_}\' does not exist")
+            if not self._p_messages.show(id_):
+                print(f"ERROR! Message ID \'{id_}\' does not exist")
+        else:
+            print(f"ERROR! Message ID \'{id_}\' does not exist or you do not have rights")
+        print()
+
+    def auto_show(self, id):
+        id_ = id
+        if control.securityConditionRead(self._p_messages.get_control(id_), self._user_control):
+            if not self._p_messages.show(id_):
+                print(f"ERROR! Message ID \'{id_}\' does not exist")
         else:
             print(f"ERROR! Message ID \'{id_}\' does not exist or you do not have rights")
         print()
@@ -87,6 +96,12 @@ class Interact:
         self._p_messages.add(self._prompt_for_line("message"),
                              self._username,
                              self._prompt_for_line("date"),
+                             self._user_control.name)
+
+    def auto_add(self, message, date):
+        self._p_messages.add(message,
+                             self._username,
+                             date,
                              self._user_control.name)
 
     ##################################################

@@ -10,7 +10,7 @@
 ########################################################################
 
 from os import path
-import interact, messages
+import interact, messages, test
 
 # Gets the absolute path of the "messages.txt" file
 FILE_NAME = path.join(path.dirname(path.abspath(__file__)), "messages.txt")
@@ -34,7 +34,8 @@ def display_options():
           "\ta .. Add a new message\n" + 
           "\tu .. Update an existing message\n" + 
           "\tr .. Delete an existing message\n" + 
-          "\to .. Display this list of options\n" + 
+          "\to .. Display this list of options\n" +
+          "\tt .. Run Test Cases\n" +
           "\tl .. Log out\n")
 
 ################################################
@@ -66,7 +67,8 @@ def session(messages):
         "a": "interact_.add();",
         "u": "interact_.update();",
         "r": "interact_.remove();",
-        "l": "print(f'Goodbye, {interact_._username}{chr(10)}'); close_session();"
+        "l": "print(f'Goodbye, {interact_._username}{chr(10)}'); close_session();",
+        "t": "test.run();"
     }
 
     while session_open:
